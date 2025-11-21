@@ -77,6 +77,7 @@ const MsisdnEntry = () => {
             placeholder={PLACEHOLDERS.PHONE}
             type="tel"
             inputMode="numeric"
+            maxLength={10}
             error={errors.msisdn?.message}
             {...register("msisdn")}
           />

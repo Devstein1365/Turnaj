@@ -48,7 +48,7 @@ const Input = forwardRef(
             disabled:opacity-50 
             disabled:cursor-not-allowed
             transition-colors
-            ${prefix ? "pl-12" : ""}
+            ${prefix ? "pl-16" : ""}
             ${suffix ? "pr-12" : ""}
             ${error ? "border-[var(--t2-error)]" : ""}
             ${inputClassName}
