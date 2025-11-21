@@ -1,1 +1,105 @@
 @import "tailwindcss";
+
+/* T2 × Turnaj Theme Tokens */
+:root {
+  /* T2 Brand Colors */
+  --t2-bg: #0a1a13;
+  --t2-surface: #142820;
+  --t2-surface-hover: #1a3329;
+  --t2-primary: #00ff88;
+  --t2-primary-hover: #00dd77;
+  --t2-on-primary: #0a1a13;
+  --t2-accent: #00cc6a;
+  --t2-border: #1f3d30;
+  --t2-border-light: #2a4d3d;
+
+  /* Semantic Colors */
+  --t2-success: #00ff88;
+  --t2-warning: #ffb800;
+  --t2-error: #ff3b3b;
+  --t2-info: #00a8ff;
+
+  /* Text Colors */
+  --t2-text-primary: #ffffff;
+  --t2-text-secondary: #a0b5ab;
+  --t2-text-tertiary: #6b8078;
+  --t2-text-disabled: #4a5a52;
+
+  /* Form Indicator Colors */
+  --t2-form-up: #00ff88;
+  --t2-form-down: #ff3b3b;
+  --t2-form-neutral: #ffb800;
+
+  /* Spacing & Border Radius */
+  --t2-radius-sm: 8px;
+  --t2-radius-md: 12px;
+  --t2-radius-lg: 16px;
+  --t2-radius-full: 9999px;
+
+  /* Shadows */
+  --t2-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --t2-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --t2-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--t2-bg);
+  color: var(--t2-text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--t2-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--t2-border);
+  border-radius: var(--t2-radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--t2-border-light);
+}
+
+/* Mobile Container */
+.mobile-container {
+  max-width: 390px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: var(--t2-bg);
+  position: relative;
+}
+
+/* Utility Classes */
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--t2-primary) 0%,
+    var(--t2-accent) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
