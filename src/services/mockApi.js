@@ -290,11 +290,17 @@ export const getUserRank = async (userId) => {
 export const getUserRewards = async (userId) => {
   await delay(500);
 
+  // Check localStorage for previously claimed rewards
+  const claimedRewards = JSON.parse(
+    localStorage.getItem("claimed_rewards") || "{}"
+  );
+  const userClaimed = claimedRewards[userId];
+
   // Check if user is in top 10
   const userEntry = mockLeaderboardData.find(
     (entry) => entry.userId === userId
   );
-  const rank = userEntry ? userEntry.rank : 28;
+  const rank = userEntry ? userEntry.rank : 5; // Default test user to rank 5 (eligible)
   const isEligible = rank <= 10;
 
   const reward = isEligible
@@ -306,7 +312,10 @@ export const getUserRewards = async (userId) => {
     eligible: isEligible,
     rank,
     reward: reward || null,
-    claimed: false,
+    claimed: userClaimed ? true : false,
+    referenceNumber: userClaimed?.referenceNumber || null,
+    claimedAt: userClaimed?.claimedAt || null,
+    claimType: userClaimed?.type || null,
   };
 };
 
@@ -328,6 +337,18 @@ export const claimReward = async (claimData) => {
 
   // Generate reference number
   const reference = `TRN${Date.now()}${Math.floor(Math.random() * 1000)}`;
+
+  // Store claimed reward in localStorage
+  const claimedRewards = JSON.parse(
+    localStorage.getItem("claimed_rewards") || "{}"
+  );
+  claimedRewards[userId] = {
+    referenceNumber: reference,
+    type,
+    payload,
+    claimedAt: Date.now(),
+  };
+  localStorage.setItem("claimed_rewards", JSON.stringify(claimedRewards));
 
   return {
     success: true,

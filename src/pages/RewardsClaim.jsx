@@ -39,8 +39,18 @@ const RewardsClaim = () => {
       setUserRewards(response);
 
       if (!response.eligible) {
-        showToast("You are not eligible for rewards", "error");
-        navigate("/leaderboard/rewards");
+        showToast(
+          "You must be in the top 10 to claim rewards. Keep playing!",
+          "warning"
+        );
+        setTimeout(() => navigate("/leagues"), 2000);
+        return;
+      }
+
+      // If already claimed, show success screen with previous reference
+      if (response.claimed) {
+        setClaimSuccess(true);
+        setReferenceNumber(response.referenceNumber || "Previously claimed");
       }
     } catch (error) {
       console.error("Failed to fetch rewards:", error);
@@ -367,10 +377,64 @@ const AirtimeClaimForm = ({
 
 // Claim Success Screen
 const ClaimSuccessScreen = ({ reference, type, onClose }) => {
+  const isAlreadyClaimed =
+    reference === "Previously claimed" || reference.includes("TRN");
+
+  const handleShare = () => {
+    const text = `🎉 I just claimed my Turnaj reward!\nReference: ${reference}\nType: ${
+      type === "cash" ? "Cash" : "Airtime/Data"
+    }\n\nJoin Turnaj and compete for rewards! 🏆`;
+
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Turnaj Reward Claimed",
+          text: text,
+        })
+        .catch(console.error);
+    } else {
+      navigator.clipboard.writeText(text);
+      alert("Receipt copied to clipboard!");
+    }
+  };
+
+  const handleDownload = () => {
+    // Create a simple text receipt
+    const receiptText = `
+TURNAJ REWARD RECEIPT
+=====================
+Date: ${new Date().toLocaleDateString()}
+Time: ${new Date().toLocaleTimeString()}
+Reference: ${reference}
+Type: ${type === "cash" ? "Cash Reward" : "Airtime/Data Bundle"}
+Status: Processing
+
+${
+  type === "cash"
+    ? "Your cash reward will be processed within 24-72 hours."
+    : "Your airtime/data will be delivered within minutes."
+}
+
+Thank you for playing Turnaj!
+Powered by T2
+    `;
+
+    const blob = new Blob([receiptText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `turnaj-receipt-${reference}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className="mobile-container min-h-screen flex flex-col items-center justify-center p-6">
-      <div className="text-center max-w-md">
-        <div className="w-20 h-20 rounded-full bg-[var(--t2-success)]/20 flex items-center justify-center mx-auto mb-6">
+    <div className="mobile-container min-h-screen flex flex-col items-center justify-center p-6 bg-[var(--t2-bg)]">
+      <div className="text-center max-w-md w-full">
+        {/* Success Icon */}
+        <div className="w-20 h-20 rounded-full bg-[var(--t2-success)]/20 flex items-center justify-center mx-auto mb-6 animate-pulse">
           <FiCheck className="text-5xl text-[var(--t2-success)]" />
         </div>
 
@@ -384,18 +448,80 @@ const ClaimSuccessScreen = ({ reference, type, onClose }) => {
             : "Your airtime/data will be delivered within minutes."}
         </p>
 
-        <div className="bg-[var(--t2-surface)] border border-[var(--t2-border)] rounded-[var(--t2-radius-md)] p-4 mb-8">
-          <p className="text-sm text-[var(--t2-text-secondary)] mb-1">
-            Reference Number
-          </p>
-          <p className="text-lg font-mono font-bold text-[var(--t2-primary)]">
-            {reference}
-          </p>
+        {/* Receipt Card */}
+        <div className="bg-[var(--t2-surface)] border-2 border-[var(--t2-primary)] rounded-[var(--t2-radius-lg)] p-6 mb-6">
+          {/* Receipt Header */}
+          <div className="pb-4 mb-4 border-b border-[var(--t2-border)]">
+            <h2 className="text-lg font-bold text-[var(--t2-text-primary)] mb-1">
+              Receipt
+            </h2>
+            <p className="text-sm text-[var(--t2-text-secondary)]">
+              {new Date().toLocaleDateString()} •{" "}
+              {new Date().toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
+          </div>
+
+          {/* Receipt Details */}
+          <div className="space-y-3 text-left">
+            <div className="flex justify-between">
+              <span className="text-sm text-[var(--t2-text-secondary)]">
+                Type
+              </span>
+              <span className="text-sm font-semibold text-[var(--t2-text-primary)]">
+                {type === "cash" ? "Cash Reward" : "Airtime/Data Bundle"}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-[var(--t2-text-secondary)]">
+                Status
+              </span>
+              <span className="text-sm font-semibold text-[var(--t2-warning)]">
+                Processing
+              </span>
+            </div>
+            <div className="pt-3 border-t border-[var(--t2-border)]">
+              <p className="text-xs text-[var(--t2-text-secondary)] mb-2">
+                Reference Number
+              </p>
+              <p className="text-base font-mono font-bold text-[var(--t2-primary)] break-all">
+                {reference}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <Button onClick={onClose} variant="primary" size="lg" fullWidth>
-          Back to Leaderboard
-        </Button>
+        {/* Action Buttons */}
+        <div className="space-y-3 mb-6">
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              onClick={handleDownload}
+              variant="secondary"
+              size="md"
+              fullWidth
+            >
+              📥 Download
+            </Button>
+            <Button
+              onClick={handleShare}
+              variant="secondary"
+              size="md"
+              fullWidth
+            >
+              📤 Share
+            </Button>
+          </div>
+          <Button onClick={onClose} variant="primary" size="lg" fullWidth>
+            Back to Leaderboard
+          </Button>
+        </div>
+
+        {/* Footer Note */}
+        <p className="text-xs text-[var(--t2-text-tertiary)]">
+          Keep your reference number for tracking purposes
+        </p>
       </div>
     </div>
   );

@@ -115,6 +115,17 @@ const CreateTeam = () => {
   const budgetRemaining = getRemainingBudget();
   const budgetPercentUsed = ((getTotalCost() / 100000000) * 100).toFixed(1);
 
+  // Get club counts from selected players
+  const getClubCount = (clubName) => {
+    return selectedPlayers.filter((p) => p.club === clubName).length;
+  };
+
+  // Check if player's club has reached limit
+  const isClubAtLimit = (player) => {
+    const count = getClubCount(player.club);
+    return count >= 3 && !isPlayerSelected(player.id);
+  };
+
   return (
     <div className="mobile-container min-h-screen pb-32">
       {/* Header */}
@@ -154,8 +165,37 @@ const CreateTeam = () => {
         </div>
       </div>
 
+      {/* Club Limit Warning */}
+      {selectedPlayers.length > 0 &&
+        (() => {
+          const clubsAtLimit = [
+            ...new Set(selectedPlayers.map((p) => p.club)),
+          ].filter((club) => getClubCount(club) >= 3);
+
+          if (clubsAtLimit.length > 0) {
+            return (
+              <div className="px-6 pb-4">
+                <div className="p-3 bg-[var(--t2-warning)]/10 border border-[var(--t2-warning)] rounded-[var(--t2-radius-md)] flex items-start gap-2">
+                  <span className="text-lg">⚠️</span>
+                  <div>
+                    <p className="text-sm font-semibold text-[var(--t2-warning)] mb-1">
+                      Club Limit Reached
+                    </p>
+                    <p className="text-xs text-[var(--t2-text-secondary)]">
+                      You have 3 players from: {clubsAtLimit.join(", ")}. Cannot
+                      add more from{" "}
+                      {clubsAtLimit.length === 1 ? "this club" : "these clubs"}.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+          return null;
+        })()}
+
       {/* Players List */}
-      <div className="px-6 py-4 space-y-3">
+      <div className="px-6 pb-6 space-y-3">
         {loading ? (
           <div className="text-center py-12">
             <div className="w-12 h-12 border-4 border-[var(--t2-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -164,18 +204,29 @@ const CreateTeam = () => {
             </p>
           </div>
         ) : (
-          players.map((player) => (
-            <PlayerCard
-              key={player.id}
-              player={player}
-              isSelected={isPlayerSelected(player.id)}
-              onAdd={() => handleAddPlayer(player)}
-              onRemove={() => handleRemovePlayer(player.id)}
-              disabled={
-                budgetRemaining < player.price && !isPlayerSelected(player.id)
-              }
-            />
-          ))
+          players.map((player) => {
+            const clubAtLimit = isClubAtLimit(player);
+            return (
+              <div key={player.id} className="relative">
+                {clubAtLimit && (
+                  <div className="absolute -top-1 -right-1 z-10 bg-[var(--t2-warning)] text-[var(--t2-on-primary)] text-xs font-bold px-2 py-0.5 rounded-full">
+                    Club Limit
+                  </div>
+                )}
+                <PlayerCard
+                  player={player}
+                  onAdd={() => handleAddPlayer(player)}
+                  onRemove={() => handleRemovePlayer(player.id)}
+                  isSelected={isPlayerSelected(player.id)}
+                  disabled={
+                    clubAtLimit ||
+                    (budgetRemaining < player.price &&
+                      !isPlayerSelected(player.id))
+                  }
+                />
+              </div>
+            );
+          })
         )}
       </div>
 

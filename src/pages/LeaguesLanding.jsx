@@ -7,6 +7,8 @@ import { useApp } from "../context/AppContext";
 import { useAuth } from "../context/AuthContext";
 import { LEAGUE_FILTERS, PLACEHOLDERS } from "../utils/constants";
 import FilterChip from "../components/FilterChip";
+import { usePullToRefresh } from "../hooks/usePullToRefresh";
+import PullToRefreshIndicator from "../components/PullToRefreshIndicator";
 
 const LeaguesLanding = () => {
   const navigate = useNavigate();
@@ -56,6 +58,10 @@ const LeaguesLanding = () => {
       setLoading(false);
     }
   };
+
+  // Pull-to-refresh
+  const { containerRef, isPulling, pullDistance } =
+    usePullToRefresh(fetchLeagues);
 
   const handleJoinLeague = (league) => {
     setCurrentLeague(league);
@@ -107,7 +113,17 @@ const LeaguesLanding = () => {
   ];
 
   return (
-    <div className="mobile-container min-h-screen pb-6">
+    <div
+      ref={containerRef}
+      className="mobile-container min-h-screen pb-6 relative overflow-y-auto"
+    >
+      {/* Pull to Refresh Indicator */}
+      <PullToRefreshIndicator
+        pullDistance={pullDistance}
+        isPulling={isPulling}
+        threshold={80}
+      />
+
       {/* Header */}
       <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
         <div className="flex items-center justify-between mb-4">
