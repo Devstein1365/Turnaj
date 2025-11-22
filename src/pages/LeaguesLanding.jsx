@@ -1,24 +1,45 @@
 // Leagues Landing Page
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiSearch, FiMenu } from "react-icons/fi";
+import { FiSearch, FiMenu, FiX } from "react-icons/fi";
 import { getLeagues } from "../services/mockApi";
 import { useApp } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
 import { LEAGUE_FILTERS, PLACEHOLDERS } from "../utils/constants";
 import FilterChip from "../components/FilterChip";
 
 const LeaguesLanding = () => {
   const navigate = useNavigate();
   const { setCurrentLeague, showToast } = useApp();
+  const { logout } = useAuth();
 
   const [leagues, setLeagues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     fetchLeagues();
   }, [activeFilter, searchQuery]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
 
   const fetchLeagues = async () => {
     try {
@@ -46,6 +67,45 @@ const LeaguesLanding = () => {
     navigate("/create-team");
   };
 
+  const handleLogout = () => {
+    logout();
+    showToast("Logged out successfully", "success");
+    navigate("/");
+  };
+
+  const menuItems = [
+    {
+      icon: "🏆",
+      label: "Global Leaderboard",
+      onClick: () => {
+        setMenuOpen(false);
+        navigate("/leaderboard");
+      },
+    },
+    {
+      icon: "📊",
+      label: "Weekly Rewards",
+      onClick: () => {
+        setMenuOpen(false);
+        navigate("/weekly-rewards");
+      },
+    },
+    {
+      icon: "🎁",
+      label: "My Rewards",
+      onClick: () => {
+        setMenuOpen(false);
+        navigate("/rewards");
+      },
+    },
+    {
+      icon: "🚪",
+      label: "Logout",
+      onClick: handleLogout,
+      danger: true,
+    },
+  ];
+
   return (
     <div className="mobile-container min-h-screen pb-6">
       {/* Header */}
@@ -57,9 +117,42 @@ const LeaguesLanding = () => {
               Leagues
             </h1>
           </div>
-          <button className="p-2 hover:bg-[var(--t2-surface)] rounded-lg transition-colors">
-            <FiMenu className="text-2xl text-[var(--t2-text-primary)]" />
-          </button>
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 hover:bg-[var(--t2-surface)] rounded-lg transition-colors"
+            >
+              {menuOpen ? (
+                <FiX className="text-2xl text-[var(--t2-text-primary)]" />
+              ) : (
+                <FiMenu className="text-2xl text-[var(--t2-text-primary)]" />
+              )}
+            </button>
+
+            {/* Dropdown Menu */}
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-[var(--t2-surface)] border border-[var(--t2-border)] rounded-[var(--t2-radius-md)] shadow-lg overflow-hidden z-20">
+                {menuItems.map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={item.onClick}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
+                      item.danger
+                        ? "text-[var(--t2-error)] hover:bg-[var(--t2-error)]/10"
+                        : "text-[var(--t2-text-primary)] hover:bg-[var(--t2-border)]"
+                    } ${
+                      index !== menuItems.length - 1
+                        ? "border-b border-[var(--t2-border)]"
+                        : ""
+                    }`}
+                  >
+                    <span className="text-xl">{item.icon}</span>
+                    <span className="font-medium">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Search Bar */}
