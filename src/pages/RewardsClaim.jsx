@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FiChevronLeft, FiCheck } from "react-icons/fi";
+import jsPDF from "jspdf";
 import { getUserRewards, claimReward } from "../services/mockApi";
 import { useAuth } from "../context/AuthContext";
 import { useApp } from "../context/AppContext";
@@ -396,7 +397,93 @@ const ClaimSuccessScreen = ({ reference, type, onClose }) => {
   };
 
   const handleDownloadPDF = async () => {
-    // Create a simple HTML canvas to generate PDF-like image
+    // Create PDF using jsPDF
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+
+    // Dark background (fill entire page)
+    doc.setFillColor(10, 26, 19); // #0a1a13
+    doc.rect(0, 0, 210, 297, "F");
+
+    // Border
+    doc.setDrawColor(0, 255, 136); // #00ff88
+    doc.setLineWidth(1);
+    doc.rect(10, 10, 190, 230);
+
+    // Title
+    doc.setTextColor(0, 255, 136); // #00ff88
+    doc.setFontSize(28);
+    doc.setFont("helvetica", "bold");
+    doc.text("TURNAJ × T2", 105, 30, { align: "center" });
+    doc.text("REWARD RECEIPT", 105, 45, { align: "center" });
+
+    // Divider line
+    doc.setDrawColor(42, 74, 58); // #2a4a3a
+    doc.setLineWidth(0.5);
+    doc.line(20, 55, 190, 55);
+
+    // Details section
+    doc.setTextColor(255, 255, 255); // white
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+
+    // Date
+    doc.text("Date:", 30, 75);
+    doc.text(new Date().toLocaleDateString(), 100, 75);
+
+    // Time
+    doc.text("Time:", 30, 90);
+    doc.text(new Date().toLocaleTimeString(), 100, 90);
+
+    // Reference
+    doc.text("Reference:", 30, 105);
+    doc.setFont("courier", "bold");
+    doc.setTextColor(0, 255, 136); // #00ff88
+    doc.text(reference, 100, 105);
+
+    // Type
+    doc.setTextColor(255, 255, 255); // white
+    doc.setFont("helvetica", "normal");
+    doc.text("Type:", 30, 120);
+    doc.text(type === "cash" ? "Cash Reward" : "Airtime/Data", 100, 120);
+
+    // Status
+    doc.text("Status:", 30, 135);
+    doc.setTextColor(255, 170, 0); // #ffaa00
+    doc.text("Processing", 100, 135);
+
+    // Divider line
+    doc.setDrawColor(42, 74, 58);
+    doc.line(20, 145, 190, 145);
+
+    // Note
+    doc.setTextColor(160, 160, 160); // #a0a0a0
+    doc.setFontSize(10);
+    const note =
+      type === "cash"
+        ? "Cash will be processed within 24-72 hours"
+        : "Airtime/Data will be delivered within minutes";
+    doc.text(note, 105, 160, { align: "center" });
+
+    // Footer
+    doc.setTextColor(0, 255, 136); // #00ff88
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Thank you for playing Turnaj!", 105, 210, { align: "center" });
+    doc.setTextColor(255, 255, 255); // white
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Powered by T2 (9mobile)", 105, 220, { align: "center" });
+
+    // Save PDF
+    doc.save(`turnaj-receipt-${reference}.pdf`);
+  };
+
+  const handleDownloadImage = () => {
+    // Create PNG image using Canvas
     const canvas = document.createElement("canvas");
     canvas.width = 800;
     canvas.height = 1000;
@@ -476,7 +563,7 @@ const ClaimSuccessScreen = ({ reference, type, onClose }) => {
     ctx.font = "14px Arial";
     ctx.fillText("Powered by T2 (9mobile)", 400, 930);
 
-    // Convert to blob and download
+    // Convert to blob and download as PNG
     canvas.toBlob((blob) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -487,11 +574,6 @@ const ClaimSuccessScreen = ({ reference, type, onClose }) => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     });
-  };
-
-  const handleDownloadImage = () => {
-    // Same as PDF but saves as PNG
-    handleDownloadPDF();
   };
 
   const handleDownloadText = () => {
