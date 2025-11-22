@@ -18,7 +18,7 @@ const Logo = ({ size = "md", showText = true }) => {
             Turnaj
           </h1>
           <p className="text-xs text-[var(--t2-primary)] font-medium">
-            Powered by T2
+            Powered by Venix
           </p>
         </div>
       )}
