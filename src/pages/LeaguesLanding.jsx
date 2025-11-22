@@ -87,7 +87,7 @@ const LeaguesLanding = () => {
       label: "Weekly Rewards",
       onClick: () => {
         setMenuOpen(false);
-        navigate("/weekly-rewards");
+        navigate("/leaderboard/rewards");
       },
     },
     {
@@ -95,7 +95,7 @@ const LeaguesLanding = () => {
       label: "My Rewards",
       onClick: () => {
         setMenuOpen(false);
-        navigate("/rewards");
+        navigate("/rewards/claim");
       },
     },
     {
