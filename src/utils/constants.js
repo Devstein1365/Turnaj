@@ -207,7 +207,7 @@ export const SUCCESS_MESSAGES = {
 
 // Form Placeholders
 export const PLACEHOLDERS = {
-  PHONE: "801 234 5678",
+  PHONE: "916 054 2481",
   OTP: "• • • • • •",
   ACCOUNT_NUMBER: "0123456789",
   SEARCH_LEAGUES: "Search for a team or league...",

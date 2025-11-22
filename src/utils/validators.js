@@ -45,19 +45,15 @@ export const normalizeNigerianPhone = (phone) => {
 /**
  * Validates Nigerian phone number format
  */
-export const msisdnSchema = z
-  .string()
-  .min(1, ERROR_MESSAGES.INVALID_PHONE)
-  .refine(
-    (phone) => {
-      const cleaned = phone.replace(/[\s\-()]/g, "");
-      return NIGERIA_PHONE_REGEX.test(cleaned);
-    },
-    {
-      message: ERROR_MESSAGES.INVALID_PHONE,
-    }
-  )
-  .transform(normalizeNigerianPhone);
+export const msisdnSchema = z.object({
+  msisdn: z
+    .string()
+    .min(1, ERROR_MESSAGES.INVALID_PHONE)
+    .regex(/^[789]\d{9}$/, {
+      message: "Enter a valid 10-digit phone number starting with 7, 8, or 9",
+    })
+    .transform(normalizeNigerianPhone),
+});
 
 // ============================================================================
 // OTP VALIDATION

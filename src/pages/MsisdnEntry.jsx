@@ -24,10 +24,32 @@ const MsisdnEntry = () => {
     handleSubmit,
     formState: { errors, isValid },
     watch,
+    setValue,
   } = useForm({
     resolver: zodResolver(msisdnSchema),
     mode: "onChange",
   });
+
+  // Quick Test Function - Remove in production
+  const handleQuickTest = () => {
+    setValue("msisdn", "8012345678", { shouldValidate: true });
+  };
+
+  // Skip to Leagues - Remove in production
+  const skipToLeagues = () => {
+    // Mock login with test user
+    localStorage.setItem("turnaj_auth_token", "test_token_123");
+    localStorage.setItem(
+      "turnaj_user_data",
+      JSON.stringify({
+        id: "test_user_1",
+        msisdn: "+2348012345678",
+        username: "TestUser",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=test",
+      })
+    );
+    navigate("/leagues");
+  };
 
   const phoneValue = watch("msisdn");
 
@@ -65,6 +87,33 @@ const MsisdnEntry = () => {
           <p className="text-[var(--t2-text-secondary)]">
             We need to verify your account.
           </p>
+        </div>
+
+        {/* TEST MODE - Remove in production */}
+        <div className="mb-6 p-4 bg-[var(--t2-warning)]/10 border border-[var(--t2-warning)] rounded-[var(--t2-radius-md)]">
+          <p className="text-xs font-semibold text-[var(--t2-warning)] mb-3 text-center">
+            🧪 TEST MODE - Quick Access
+          </p>
+          <div className="flex gap-2">
+            <Button
+              onClick={handleQuickTest}
+              variant="secondary"
+              size="sm"
+              fullWidth
+              type="button"
+            >
+              Fill Test Number
+            </Button>
+            <Button
+              onClick={skipToLeagues}
+              variant="primary"
+              size="sm"
+              fullWidth
+              type="button"
+            >
+              Skip to App →
+            </Button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
