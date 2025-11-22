@@ -66,7 +66,7 @@ const RewardsClaim = () => {
       <ClaimSuccessScreen
         reference={referenceNumber}
         type={activeTab}
-        onClose={() => navigate("/leaderboard")}
+        onClose={() => navigate(-1)}
       />
     );
   }
@@ -77,7 +77,7 @@ const RewardsClaim = () => {
       <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
         <div className="flex items-center gap-4 mb-4">
           <button
-            onClick={() => navigate("/leaderboard/rewards")}
+            onClick={() => navigate(-1)}
             className="p-2 hover:bg-[var(--t2-surface)] rounded-lg transition-colors"
           >
             <FiChevronLeft className="text-2xl text-[var(--t2-text-primary)]" />

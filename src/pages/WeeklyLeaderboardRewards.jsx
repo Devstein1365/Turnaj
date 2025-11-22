@@ -54,7 +54,7 @@ const WeeklyLeaderboardRewards = () => {
       <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate("/leaderboard")}
+            onClick={() => navigate(-1)}
             className="p-2 hover:bg-[var(--t2-surface)] rounded-lg transition-colors"
           >
             <FiChevronLeft className="text-2xl text-[var(--t2-text-primary)]" />
