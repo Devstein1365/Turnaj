@@ -282,10 +282,7 @@ const AirtimeClaimForm = ({
   const { showToast } = useApp();
   const [selectedBundle, setSelectedBundle] = useState("");
 
-  const {
-    handleSubmit,
-    formState: { isValid },
-  } = useForm({
+  const { handleSubmit } = useForm({
     resolver: zodResolver(airtimeClaimSchema),
   });
 
@@ -398,8 +395,107 @@ const ClaimSuccessScreen = ({ reference, type, onClose }) => {
     }
   };
 
-  const handleDownload = () => {
-    // Create a simple text receipt
+  const handleDownloadPDF = async () => {
+    // Create a simple HTML canvas to generate PDF-like image
+    const canvas = document.createElement("canvas");
+    canvas.width = 800;
+    canvas.height = 1000;
+    const ctx = canvas.getContext("2d");
+
+    // Background
+    ctx.fillStyle = "#0a1a13";
+    ctx.fillRect(0, 0, 800, 1000);
+
+    // Border
+    ctx.strokeStyle = "#00ff88";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(20, 20, 760, 960);
+
+    // Title
+    ctx.fillStyle = "#00ff88";
+    ctx.font = "bold 36px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("TURNAJ × T2", 400, 80);
+    ctx.fillText("REWARD RECEIPT", 400, 130);
+
+    // Divider
+    ctx.strokeStyle = "#2a4a3a";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(60, 160);
+    ctx.lineTo(740, 160);
+    ctx.stroke();
+
+    // Details
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "20px Arial";
+    ctx.textAlign = "left";
+
+    ctx.fillText("Date:", 60, 220);
+    ctx.fillText(new Date().toLocaleDateString(), 400, 220);
+
+    ctx.fillText("Time:", 60, 270);
+    ctx.fillText(new Date().toLocaleTimeString(), 400, 270);
+
+    ctx.fillText("Reference:", 60, 320);
+    ctx.font = "bold 20px monospace";
+    ctx.fillStyle = "#00ff88";
+    ctx.fillText(reference, 400, 320);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "20px Arial";
+    ctx.fillText("Type:", 60, 370);
+    ctx.fillText(type === "cash" ? "Cash Reward" : "Airtime/Data", 400, 370);
+
+    ctx.fillText("Status:", 60, 420);
+    ctx.fillStyle = "#ffaa00";
+    ctx.fillText("Processing", 400, 420);
+
+    // Divider
+    ctx.strokeStyle = "#2a4a3a";
+    ctx.beginPath();
+    ctx.moveTo(60, 460);
+    ctx.lineTo(740, 460);
+    ctx.stroke();
+
+    // Note
+    ctx.fillStyle = "#a0a0a0";
+    ctx.font = "16px Arial";
+    ctx.textAlign = "center";
+    const note =
+      type === "cash"
+        ? "Cash will be processed within 24-72 hours"
+        : "Airtime/Data will be delivered within minutes";
+    ctx.fillText(note, 400, 520);
+
+    // Footer
+    ctx.fillStyle = "#00ff88";
+    ctx.font = "bold 18px Arial";
+    ctx.fillText("Thank you for playing Turnaj!", 400, 900);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "14px Arial";
+    ctx.fillText("Powered by T2 (9mobile)", 400, 930);
+
+    // Convert to blob and download
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `turnaj-receipt-${reference}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  };
+
+  const handleDownloadImage = () => {
+    // Same as PDF but saves as PNG
+    handleDownloadPDF();
+  };
+
+  const handleDownloadText = () => {
+    // Original text download
     const receiptText = `
 TURNAJ REWARD RECEIPT
 =====================
@@ -495,15 +591,36 @@ Powered by T2
 
         {/* Action Buttons */}
         <div className="space-y-3 mb-6">
-          <div className="grid grid-cols-2 gap-3">
+          {/* Download Options */}
+          <div className="grid grid-cols-3 gap-2">
             <Button
-              onClick={handleDownload}
+              onClick={handleDownloadImage}
               variant="secondary"
-              size="md"
+              size="sm"
               fullWidth
             >
-              📥 Download
+              🖼️ Image
             </Button>
+            <Button
+              onClick={handleDownloadPDF}
+              variant="secondary"
+              size="sm"
+              fullWidth
+            >
+              📄 PDF
+            </Button>
+            <Button
+              onClick={handleDownloadText}
+              variant="secondary"
+              size="sm"
+              fullWidth
+            >
+              📝 Text
+            </Button>
+          </div>
+
+          {/* Share & Back */}
+          <div className="grid grid-cols-2 gap-3">
             <Button
               onClick={handleShare}
               variant="secondary"
@@ -512,10 +629,10 @@ Powered by T2
             >
               📤 Share
             </Button>
+            <Button onClick={onClose} variant="primary" size="md" fullWidth>
+              ← Back
+            </Button>
           </div>
-          <Button onClick={onClose} variant="primary" size="lg" fullWidth>
-            Back to Leaderboard
-          </Button>
         </div>
 
         {/* Footer Note */}
