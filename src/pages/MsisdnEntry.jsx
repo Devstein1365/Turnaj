@@ -18,6 +18,9 @@ const MsisdnEntry = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const {
     register,
@@ -59,16 +62,28 @@ const MsisdnEntry = () => {
 
     try {
       const normalizedPhone = normalizeNigerianPhone(data.msisdn);
-      await sendOTP(normalizedPhone);
+      const response = await sendOTP(normalizedPhone);
 
-      // Navigate to OTP screen with phone number
-      navigate("/otp", { state: { msisdn: normalizedPhone } });
+      // FOR TESTING: Show OTP in modal for mobile users
+      if (response.otpCode) {
+        setOtpCode(response.otpCode);
+        setPhoneNumber(normalizedPhone);
+        setShowOtpModal(true);
+      } else {
+        // Navigate to OTP screen with phone number
+        navigate("/otp", { state: { msisdn: normalizedPhone } });
+      }
     } catch (error) {
       console.error("Failed to send OTP:", error);
       setServerError(error.message || ERROR_MESSAGES.SERVER_ERROR);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleContinueToOtp = () => {
+    setShowOtpModal(false);
+    navigate("/otp", { state: { msisdn: phoneNumber } });
   };
 
   return (
@@ -177,6 +192,45 @@ const MsisdnEntry = () => {
         </a>
         .
       </div>
+
+      {/* OTP Code Modal - FOR TESTING ONLY */}
+      {showOtpModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-6 z-50">
+          <div className="bg-[var(--t2-surface)] rounded-[var(--t2-radius-lg)] p-6 max-w-sm w-full border-2 border-[var(--t2-primary)] animate-fade-in">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-[var(--t2-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">📱</span>
+              </div>
+              <h2 className="text-xl font-bold text-[var(--t2-text-primary)] mb-2">
+                Your OTP Code
+              </h2>
+              <p className="text-sm text-[var(--t2-text-secondary)]">
+                Copy this code to verify your number
+              </p>
+            </div>
+
+            <div className="bg-[var(--t2-bg)] rounded-[var(--t2-radius-md)] p-4 mb-6">
+              <p className="text-3xl font-mono font-bold text-[var(--t2-primary)] text-center tracking-widest">
+                {otpCode}
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                onClick={handleContinueToOtp}
+                variant="primary"
+                size="lg"
+                fullWidth
+              >
+                Continue to Verification
+              </Button>
+              <p className="text-xs text-center text-[var(--t2-text-tertiary)]">
+                ⚠️ TEST MODE: In production, this code will be sent via SMS
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

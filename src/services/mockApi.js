@@ -49,6 +49,8 @@ export const sendOTP = async (msisdn) => {
     success: true,
     ttlSeconds: OTP_RESEND_COOLDOWN,
     message: SUCCESS_MESSAGES.OTP_SENT,
+    // FOR TESTING ONLY - Remove in production
+    otpCode: otp,
   };
 };
 
