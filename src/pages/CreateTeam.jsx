@@ -14,6 +14,7 @@ import {
 import { formatPrice } from "../utils/validators";
 import PlayerCard from "../components/PlayerCard";
 import Button from "../components/ui/Button";
+import BottomNav from "../components/BottomNav";
 
 const CreateTeam = () => {
   const navigate = useNavigate();
@@ -307,6 +308,9 @@ const CreateTeam = () => {
           </Button>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 };

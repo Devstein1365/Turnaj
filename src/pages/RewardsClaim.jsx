@@ -16,6 +16,7 @@ import {
 } from "../utils/constants";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import BottomNav from "../components/BottomNav";
 
 const RewardsClaim = () => {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ const RewardsClaim = () => {
   }
 
   return (
-    <div className="mobile-container min-h-screen pb-6">
+    <div className="mobile-container min-h-screen pb-24">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
         <div className="flex items-center gap-4 mb-4">
@@ -130,7 +131,7 @@ const RewardsClaim = () => {
 
       {/* Content */}
       <div className="px-6 py-6">
-        {activeTab === "cash" ? (
+        {(activeTab === "cash" ? (
           <CashClaimForm
             userRewards={userRewards}
             user={user}
@@ -147,9 +148,12 @@ const RewardsClaim = () => {
             setClaiming={setClaiming}
             setClaimSuccess={setClaimSuccess}
             setReferenceNumber={setReferenceNumber}
-          />
+          />)
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 };

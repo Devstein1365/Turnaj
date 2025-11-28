@@ -8,6 +8,7 @@ import { useApp } from "../context/AppContext";
 import { LEADERBOARD_SCOPES } from "../utils/constants";
 import LeaderboardRow from "../components/LeaderboardRow";
 import Button from "../components/ui/Button";
+import BottomNav from "../components/BottomNav";
 
 const GlobalLeaderboard = () => {
   const navigate = useNavigate();
@@ -179,6 +180,9 @@ const GlobalLeaderboard = () => {
           </div>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 };

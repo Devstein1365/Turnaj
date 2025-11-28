@@ -9,6 +9,7 @@ import { TOP_10_REWARDS } from "../utils/constants";
 import LeaderboardRow from "../components/LeaderboardRow";
 import RewardBadge from "../components/RewardBadge";
 import Button from "../components/ui/Button";
+import BottomNav from "../components/BottomNav";
 
 const WeeklyLeaderboardRewards = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const WeeklyLeaderboardRewards = () => {
   };
 
   return (
-    <div className="mobile-container min-h-screen pb-6">
+    <div className="mobile-container min-h-screen pb-24">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
         <div className="flex items-center gap-4">
@@ -181,6 +182,9 @@ const WeeklyLeaderboardRewards = () => {
           </div>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 };
