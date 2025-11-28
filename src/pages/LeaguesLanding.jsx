@@ -66,7 +66,7 @@ const LeaguesLanding = () => {
       />
 
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
+      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-4 py-4">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-2xl">⚽</span>
           <h1 className="text-xl font-bold text-[var(--t2-text-primary)]">
@@ -88,7 +88,7 @@ const LeaguesLanding = () => {
       </div>
 
       {/* Filter Chips */}
-      <div className="px-6 py-4 overflow-x-auto">
+      <div className="px-4 pt-4 pb-2 overflow-x-auto">
         <div className="flex gap-2">
           {LEAGUE_FILTERS.map((filter) => (
             <FilterChip
@@ -102,7 +102,7 @@ const LeaguesLanding = () => {
       </div>
 
       {/* Leagues List */}
-      <div className="px-6 space-y-4">
+      <div className="px-4 py-4 space-y-4 pb-6">
         {loading ? (
           <div className="text-center py-12">
             <div className="w-12 h-12 border-4 border-[var(--t2-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -127,9 +127,9 @@ const LeaguesLanding = () => {
               league={league}
               onJoin={() => handleJoinLeague(league)}
               onView={() => handleViewLeague(league)}
-            />)
-          ))}
-        
+            />
+          ))
+        )}
       </div>
 
       {/* Bottom Navigation */}

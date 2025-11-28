@@ -86,7 +86,7 @@ const RewardsClaim = () => {
   return (
     <div className="mobile-container min-h-screen pb-24">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
+      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-4 py-4">
         <div className="flex items-center gap-4 mb-4">
           <button
             onClick={() => navigate(-1)}
@@ -130,8 +130,8 @@ const RewardsClaim = () => {
       </div>
 
       {/* Content */}
-      <div className="px-6 py-6">
-        {(activeTab === "cash" ? (
+      <div className="px-4 py-4">
+        {activeTab === "cash" ? (
           <CashClaimForm
             userRewards={userRewards}
             user={user}
@@ -148,7 +148,7 @@ const RewardsClaim = () => {
             setClaiming={setClaiming}
             setClaimSuccess={setClaimSuccess}
             setReferenceNumber={setReferenceNumber}
-          />)
+          />
         )}
       </div>
 

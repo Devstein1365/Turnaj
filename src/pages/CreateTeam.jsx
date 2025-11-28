@@ -130,7 +130,7 @@ const CreateTeam = () => {
   return (
     <div className="mobile-container min-h-screen pb-32">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
+      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-4 py-4">
         <div className="flex items-center gap-4 mb-4">
           <button
             onClick={() => navigate("/leagues")}
@@ -175,7 +175,7 @@ const CreateTeam = () => {
 
           if (clubsAtLimit.length > 0) {
             return (
-              <div className="px-6 pb-4">
+              <div className="px-4 py-3">
                 <div className="p-3 bg-[var(--t2-warning)]/10 border border-[var(--t2-warning)] rounded-[var(--t2-radius-md)] flex items-start gap-2">
                   <span className="text-lg">⚠️</span>
                   <div>
@@ -196,7 +196,7 @@ const CreateTeam = () => {
         })()}
 
       {/* Players List */}
-      <div className="px-6 pb-6 space-y-3">
+      <div className="px-4 pb-6 space-y-3">
         {loading ? (
           <div className="text-center py-12">
             <div className="w-12 h-12 border-4 border-[var(--t2-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -232,7 +232,7 @@ const CreateTeam = () => {
       </div>
 
       {/* Selected Players Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[var(--t2-surface)] border-t-2 border-[var(--t2-border)] p-6 max-w-[390px] mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 bg-[var(--t2-surface)] border-t-2 border-[var(--t2-border)] p-4 max-w-[390px] mx-auto">
         {/* Selected Players Pills */}
         {selectedPlayers.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">

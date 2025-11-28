@@ -52,7 +52,7 @@ const WeeklyLeaderboardRewards = () => {
   return (
     <div className="mobile-container min-h-screen pb-24">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
+      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-4 py-4">
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(-1)}
@@ -67,7 +67,7 @@ const WeeklyLeaderboardRewards = () => {
       </div>
 
       {/* Rewards Banner */}
-      <div className="px-6 py-4">
+      <div className="px-4 py-4">
         <div className="bg-gradient-to-r from-[var(--t2-primary)]/20 to-[var(--t2-accent)]/20 border-2 border-[var(--t2-primary)] rounded-[var(--t2-radius-md)] p-4 text-center">
           <p className="text-lg font-bold text-[var(--t2-text-primary)] mb-1">
             🏆 Top 10 earn rewards this week
@@ -79,7 +79,7 @@ const WeeklyLeaderboardRewards = () => {
       </div>
 
       {/* Leaderboard with Rewards */}
-      <div className="px-6 space-y-3">
+      <div className="px-4 space-y-3">
         {loading ? (
           <div className="text-center py-12">
             <div className="w-12 h-12 border-4 border-[var(--t2-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -167,7 +167,7 @@ const WeeklyLeaderboardRewards = () => {
 
       {/* Not Eligible Message */}
       {!loading && userRewards && !userRewards.eligible && (
-        <div className="px-6 py-6">
+        <div className="px-4 py-6">
           <div className="bg-[var(--t2-surface)] border border-[var(--t2-border)] rounded-[var(--t2-radius-md)] p-6 text-center">
             <div className="text-4xl mb-3">📊</div>
             <p className="text-lg font-bold text-[var(--t2-text-primary)] mb-2">

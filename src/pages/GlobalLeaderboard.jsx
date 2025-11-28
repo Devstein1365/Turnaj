@@ -52,7 +52,7 @@ const GlobalLeaderboard = () => {
   return (
     <div className="mobile-container min-h-screen pb-24">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-6 py-4">
+      <div className="sticky top-0 z-10 bg-[var(--t2-bg)] border-b border-[var(--t2-border)] px-4 py-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             <button
@@ -104,7 +104,7 @@ const GlobalLeaderboard = () => {
       </div>
 
       {/* Leaderboard List */}
-      <div className="px-6 py-4 space-y-3">
+      <div className="px-4 py-4 space-y-3">
         {loading ? (
           <div className="text-center py-12">
             <div className="w-12 h-12 border-4 border-[var(--t2-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -145,7 +145,7 @@ const GlobalLeaderboard = () => {
 
       {/* View Rewards Button */}
       {!loading && leaderboard.length > 0 && (
-        <div className="px-6 py-4">
+        <div className="px-4 py-4">
           <Button
             onClick={() => navigate("/leaderboard/rewards")}
             variant="secondary"
