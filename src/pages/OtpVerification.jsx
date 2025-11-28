@@ -46,7 +46,10 @@ const OtpVerification = () => {
 
   const handleOtpChange = (value) => {
     setOtp(value);
-    setError(""); // Clear error when user types
+    // Clear error when user types, especially when all 6 digits are entered
+    if (error) {
+      setError("");
+    }
   };
 
   const handleVerify = async () => {
